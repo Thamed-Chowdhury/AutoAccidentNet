@@ -32,6 +32,7 @@ def title_link_dict_func(API_KEY, url, newspaper_name, button_click_times):
         - Make sure you only list the news titles and links. There are titles and links to other pages of the newspaper and you should exclude them.
         - Make sure your links are in full url format.
         - Make sure you properly list all the news you encounter. Never truncate your response by 'the rest is given similarly....'
+        - If you cannot find any news title and links, simply return 'No news title-link pair found in the given div_string.'
         """
         try:
             response = model.generate_content(
@@ -109,7 +110,7 @@ def title_link_dict_func(API_KEY, url, newspaper_name, button_click_times):
         txt = f"div #{i}:\n" + div_tag.prettify() + "\n"+"-" * 50+"\n"
         prev_a_string = a_string
         a_string = a_string + txt
-        if string2token_count(a_string)>500000:# Send the string to LLM if the character length exceeds 500000
+        if string2token_count(a_string)>100000:# Send the string to LLM if the character length exceeds 100000. Code line limit 10000 only!!
             a_string = prev_a_string
             i=i-1
             print(string2token_count(a_string))

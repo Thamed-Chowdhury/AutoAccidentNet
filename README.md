@@ -19,6 +19,9 @@ You will require Google's Gemini API key. Obtain one from: https://aistudio.goog
 In the pipeline notebook, You have to at least input 4 fields: Gemini_API_Keys, newspaper_name , date and url. Note, date means the publish date of the last news that you want.
 If you want to just test it quickly, set DEBUG = True. Otherwise, if you want the full output, set it to False. 
 ![image](https://github.com/user-attachments/assets/a359c0c1-23a6-48f2-b01e-a0c744d5cfb4)
+An example input can be:
+![image](https://github.com/user-attachments/assets/6e5770ed-acea-41ba-85d4-0cd544fb0c0a)
+
 ## Step 4:
 After providing necessary inputs, run all the cells. You can see the output logs at the end of the notebook. If everything goes correctly, a csv file will be saved in SCRAPED folder.
 ## Step 5:

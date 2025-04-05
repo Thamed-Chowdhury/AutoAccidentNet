@@ -5,8 +5,8 @@ Create a conda virtual environment with python == 3.12.4
 Clone the repository and change your current directory to the cloned repository file. 
 ## Step 3:
 Open the notebook named **pipeline_notebook**
-In the pipeline notebook, You have to at least input 4 fields: Gemini_API_Keys, newspaper_name , date and url.
-If you want to just test it quickly, set DEBUG = True. Otherwise, if you want the full output, set it to True
+In the pipeline notebook, You have to at least input 4 fields: Gemini_API_Keys, newspaper_name , date and url. Note, date means the publish date of the last news that you want.
+If you want to just test it quickly, set DEBUG = True. Otherwise, if you want the full output, set it to False. 
 ![image](https://github.com/user-attachments/assets/a359c0c1-23a6-48f2-b01e-a0c744d5cfb4)
 ## Step 4:
 You can see the output logs ar the end of the notebook. If everything goes correct, a csv file will be saved in SCRAPED folder

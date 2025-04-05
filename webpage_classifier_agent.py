@@ -75,19 +75,22 @@ def classifier(API, url):
         try:
             # Open the URL
             driver.get(url)
-
+            driver.maximize_window()
+            time.sleep(10)
             # Get the initial HTML code and its length
             html_code_1 = driver.page_source
             length_1 = len(html_code_1)
 
+            driver.execute_script("document.body.style.zoom='50%'")
             # Get the scroll height of the webpage
+
             scroll_height = driver.execute_script("return document.body.scrollHeight")
 
             # Scroll down to the bottom of the page
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-            # Wait for 20 seconds
-            time.sleep(20)
+            # Wait for 30 seconds
+            time.sleep(30)
 
             # Get the HTML code again and its length
             html_code_2 = driver.page_source
@@ -98,8 +101,8 @@ def classifier(API, url):
 
             print("Pecentage_Increase: ", percentage_increase)
 
-            # Return True if the increase is more than 25%, else False
-            return percentage_increase > 25
+            # Return True if the increase is more than 9%, else False
+            return percentage_increase > 9
 
         finally:
             # Close the browser
@@ -114,11 +117,11 @@ def classifier(API, url):
         sample_file = PIL.Image.open(image_path)
 
         # Choose a Gemini model
-        model = genai.GenerativeModel(model_name="gemini-1.5-pro")
+        model = genai.GenerativeModel(model_name="gemini-2.0-flash")
 
         # Prompt for Gemini
         prompt = (
-            "In this webpage screenshot, can you see any numbered next page buttons (1,2,3 etc.), next page navigation button or load more type of button?"
+            "In this webpage screenshot, can you see any numbered next page buttons (1,2,3 etc.), next page navigation button or 'load more'/আরও/আরো type of button?"
             "The buttons may be in bangla as the screenshot can be of a bengali or english newspaper website."
             "Your answer should be in this format: <answer> No <answer> or <answer> Yes <answer>"
         )
@@ -131,7 +134,7 @@ def classifier(API, url):
         sample_file = PIL.Image.open(image_path)
 
         # Choose a Gemini model
-        model = genai.GenerativeModel(model_name="gemini-2.0-flash-exp")
+        model = genai.GenerativeModel(model_name="gemini-2.0-flash")
 
         # Prompt for Gemini
         prompt1 = (
@@ -166,7 +169,7 @@ def classifier(API, url):
     if result_infinite_scroll == True:
         return "The webpage is of type: <type>Infinite Scroll<type>"
     
-    scroll_factors = [0.85, 0.45, 0.35, 0.20, 0.10, 0.05]
+    scroll_factors = [0.85, 0.65, 0.45, 0.35, 0.20, 0.10, 0.05]
 
     for factor in scroll_factors:
         time.sleep(7)
@@ -176,7 +179,7 @@ def classifier(API, url):
 
         # Maximize the browser window
         driver.maximize_window()
-        driver.execute_script("document.body.style.zoom='50%'")
+        driver.execute_script("document.body.style.zoom='80%'")
         # Scroll to the end of the webpage
         scroll_to_end(driver, factor)
 

@@ -6,4 +6,5 @@ protobuf==5.29.3
 Requests==2.32.3
 selenium==4.27.1
 google-generativeai==0.8.3
-google-cloud-aiplatform[tokenization]
+google-cloud-aiplatform[tokenization]==1.75.0
+geopandas==1.0.1

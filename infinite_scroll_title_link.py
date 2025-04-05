@@ -17,21 +17,70 @@ def title_link_dict_func(API_KEY, url, newspaper_name, button_click_times):
 
     def llm_a_tag_extract(a_string):
         prompt = f"""
-        Here is a string that contains some <a > tags of a Bengali newspaper- {url}:
-        {a_string}
+    You are an expert at analyzing HTML code to extract specific information and categorize it. Your task is to perform the following steps:
 
-        ** Instructions **
-        - List me all the news titles and their corresponding links. Do not use any programming. Just list them yourself. 
-        - Enclose every news title-link pair in a token of the form <news> [title <seperator> link] <news>
-        - Between every title and link, put a token of the form: <seperator>
-        - Example:
-        <news>দেশে ফিরলেন প্রধান উপদেষ্টা, বিমানবন্দরে ওয়েটিং লাউঞ্জ উদ্বোধন<seperator>https://www.prothomalo.com/bangladesh/qllmc2doql<news>
-        <news>ফেনীতে ছুরিকাঘাতে কলেজছাত্র নিহত<seperator>https://www.prothomalo.com/bangladesh/district/17dhwc2gss<news>
-        - Make sure there is no duplicate in your response
-        - Make sure you only list the news titles and links. There are titles and links to other pages of the newspaper and you should exclude them.
-        - Make sure your links are in full url format.
-        - Make sure you properly list all the news you encounter. Never truncate your response by 'the rest is given similarly....'
-        """
+    1. **Extract Information**:
+    From the provided HTML code, extract:
+    - The **news title**
+    - The **hyperlink** associated with the news. Make sure you provide the full URL.
+
+    2. **Categorize News**:
+    Based on the extracted news title, categorize the news into one of the following categories:
+    - **check**: If the news title strongly suggests that it is about a road accident.
+    - **pass**: If it is certain from the title that the news is NOT about a road accident.
+    - **check**: If the title is unclear, or it is not obvious whether the news is about an accident or not.
+
+    3. **Output the Result**:
+    Provide the output in the following format for each piece of news:
+    <news>NEWS_TITLE<seperator>NEWS_LINK<seperator>CATEGORY</news>
+    Replace `NEWS_TITLE`, `NEWS_LINK`, and `CATEGORY` with the actual extracted information and assigned category.
+
+    ### Additional Feature: Handling Relative URLs  
+    - If the `href` in the HTML snippet starts with `/`, treat it as a relative URL and prepend the given **base URL** to construct the full URL.  
+    - If the `href` already contains a full URL (starting with `http://` or `https://`), use it as is.  
+
+    ---
+
+    ### Example  
+
+    #### Input HTML Snippet:  
+    ```html
+    <h3 class="headline-title   _1d6-d">
+        <a target="_self" aria-label="Title link" class="title-link" href="/bangladesh/district/y31oxxh4cw">
+            <span class="tilte-no-link-parent">দাঁড়িয়ে থাকা ট্রাকে মোটরসাইকেলের ধাক্কা, কলেজছাত্রসহ দুজন নিহত</span>
+        </a>
+    </h3>
+    ```
+    #### Given Base URL:  
+    https://www.prothomalo.com  
+
+    #### Expected Output:  
+    ```xml
+    <news>দাঁড়িয়ে থাকা ট্রাকে মোটরসাইকেলের ধাক্কা, কলেজছাত্রসহ দুজন নিহত<seperator>https://www.prothomalo.com/bangladesh/district/y31oxxh4cw<seperator>check</news>
+    ```
+
+
+    ### Example
+    If the HTML snippet is:
+    <h3 class="headline-title   _1d6-d"><a target="_self" aria-label="Title link" class="title-link" href="https://www.prothomalo.com/bangladesh/district/y31oxxh4cw"><span class="tilte-no-link-parent">দাঁড়িয়ে থাকা ট্রাকে মোটরসাইকেলের ধাক্কা, কলেজছাত্রসহ দুজন নিহত</span></a></h3>
+
+    Your output should look like:
+    <news>দাঁড়িয়ে থাকা ট্রাকে মোটরসাইকেলের ধাক্কা, কলেজছাত্রসহ দুজন নিহত<seperator>https://www.prothomalo.com/bangladesh/district/y31oxxh4cw<seperator>check</news>
+
+    If the HTML snippet is:
+    <h3 class="headline-title   _1d6-d"><a target="_self" aria-label="Title link" class="title-link" href="https://www.prothomalo.com/bangladesh/national/ab12345"><span class="tilte-no-link-parent">নির্বাচনের প্রস্তুতি নিয়ে প্রধানমন্ত্রীর সভা</span></a></h3>
+
+    Your output should look like:
+    <news>নির্বাচনের প্রস্তুতি নিয়ে প্রধানমন্ত্রীর সভা<seperator>https://www.prothomalo.com/bangladesh/national/ab12345<seperator>pass</news>
+
+    ### Input for the Task
+    The input will be an HTML code snippet containing multiple news items. Process each item individually and provide the result for each. Ensure the output format strictly matches the example.
+
+    Base URL: {url}
+    HTML code snippet:
+    -------------------
+    {a_string}
+    """
         try:
             response = model.generate_content(prompt)
         except Exception as e:
@@ -57,22 +106,22 @@ def title_link_dict_func(API_KEY, url, newspaper_name, button_click_times):
 
         # Initialize WebDriver
         driver = webdriver.Chrome(options=options)
-
+        driver.maximize_window()  # Full screen
         try:
             # Open the webpage
             driver.get(url)
 
             for _ in range(iterations):
-                time.sleep(15)
-                # Get the current scroll height
-                scroll_height = driver.execute_script("return document.body.scrollHeight")
+                goUpFactor=100
+                for i in range(5):
+                    time.sleep(15)
+                    # Get the current scroll height
+                    scroll_height = driver.execute_script("return document.body.scrollHeight") - goUpFactor*i
 
-                # Scroll to the bottom of the page
-                driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                    # Scroll to the bottom of the page
+                    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-                # Wait for content to load
-                time.sleep(2)
-
+               
             # Get the final HTML source
             final_html = driver.page_source
 
@@ -118,7 +167,7 @@ def title_link_dict_func(API_KEY, url, newspaper_name, button_click_times):
         txt = f"a #{i}:\n" + a_tag.prettify() + "\n"+"-" * 50+"\n"
         prev_a_string = a_string
         a_string = a_string + txt
-        if string2token_count(a_string)>500000:# Send the string to LLM if the character length exceeds 500000
+        if string2token_count(a_string)>100000:# Send the string to LLM if the character length exceeds 100000
             a_string = prev_a_string
             i=i-1
             print(string2token_count(a_string))
@@ -132,17 +181,38 @@ def title_link_dict_func(API_KEY, url, newspaper_name, button_click_times):
 
     #14 (End of news title and link extraction task)
     import re
+
+    def extract_news_details(llm_response):
+        # Regular expression to extract news title, link, and checking condition
+        pattern = r"<news>(.*?)<seperator>(.*?)<seperator>(.*?)</news>"
+        
+        # Extract matches
+        matches = re.findall(pattern, llm_response)
+        
+        # Create separate lists for news title, link, and checking condition
+        news_titles = [match[0] for match in matches]
+        news_links = [match[1] for match in matches]
+        checking_conditions = [match[2] for match in matches]
+        
+        return news_titles, news_links, checking_conditions
+    # Get the lists
+    news_titles, news_links, checking_conditions = extract_news_details(llm_response)
+
+    # Print the results
+    print("News Titles:", news_titles)
+    print("News Links:", news_links)
+    print("Checking Conditions:", checking_conditions)
+
     import pandas as pd
+    news_df = pd.DataFrame({
+        "News Title": news_titles,
+        "News Link": news_links,
+        "Checking condition": checking_conditions
+    })
 
-    input_string = llm_response
-    # Regular expression to match each news title and link
-    pattern = r"<news>(.*?)<seperator>(.*?)<news>"
-
-    # Find all matches
-    matches = re.findall(pattern, input_string)
-
-    # Convert matches to a DataFrame
-    news_df = pd.DataFrame(matches, columns=['News Title', 'News Link'])
-    
-    # Return the DataFrame
+    news_df.drop_duplicates(inplace=True)
+    print(f"Number of news in original dataframe = {len(news_df)}")
+    news_df = news_df[news_df["Checking condition"] == "check"]
+    news_df.reset_index(inplace = True, drop = True)
+    print(f"Number of news in fast filtered dataframe = {len(news_df)}")
     return news_df

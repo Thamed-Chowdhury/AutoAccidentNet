@@ -57,6 +57,8 @@ def collect(API, url_list):
     - The **news title**
     - The **hyperlink** associated with the news
 
+    The **news title** can be found within the `<span class="tilte-no-link-parent">` tag or a similar structure. The **hyperlink** is present in the `href` attribute of the `<a>` tag associated with the title.
+
     2. **Categorize News**:
     Based on the extracted news title, categorize the news into one of the following categories:
     - **check**: If the news title strongly suggests that it is about a road accident.
@@ -67,30 +69,6 @@ def collect(API, url_list):
     Provide the output in the following format for each piece of news:
     <news>NEWS_TITLE<seperator>NEWS_LINK<seperator>CATEGORY</news>
     Replace `NEWS_TITLE`, `NEWS_LINK`, and `CATEGORY` with the actual extracted information and assigned category.
-
-    ### Additional Feature: Handling Relative URLs  
-    - If the `href` in the HTML snippet starts with `/`, treat it as a relative URL and prepend the given **base URL** to construct the full URL.  
-    - If the `href` already contains a full URL (starting with `http://` or `https://`), use it as is.  
-
-    ---
-
-    ### Example  
-
-    #### Input HTML Snippet:  
-    ```html
-    <h3 class="headline-title   _1d6-d">
-        <a target="_self" aria-label="Title link" class="title-link" href="/bangladesh/district/y31oxxh4cw">
-            <span class="tilte-no-link-parent">দাঁড়িয়ে থাকা ট্রাকে মোটরসাইকেলের ধাক্কা, কলেজছাত্রসহ দুজন নিহত</span>
-        </a>
-    </h3>
-    ```
-    #### Given Base URL:  
-    https://www.prothomalo.com  
-
-    #### Expected Output:  
-    ```xml
-    <news>দাঁড়িয়ে থাকা ট্রাকে মোটরসাইকেলের ধাক্কা, কলেজছাত্রসহ দুজন নিহত<seperator>https://www.prothomalo.com/bangladesh/district/y31oxxh4cw<seperator>check</news>
-    ```
 
     ### Example
     If the HTML snippet is:
@@ -108,7 +86,7 @@ def collect(API, url_list):
     ### Input for the Task
     The input will be an HTML code snippet containing multiple news items. Process each item individually and provide the result for each. Ensure the output format strictly matches the example.
 
-    Base URL:{url_list[i]}
+
     HTML code snippet:
     -------------------
     {html}
@@ -120,12 +98,8 @@ def collect(API, url_list):
             print(f"Error occurred:{e}. Going to sleep for 2 minutes")
             time.sleep(120)
             response = model.generate_content(prompt)
-        try:
-            print(response.text)
-            llm_response = llm_response + response.text
-        except Exception as e:
-            print(f"Error occurred in response.text: {e}.")
-            pass
+        print(response.text)
+        llm_response = llm_response + response.text
     import re
 
     def extract_news_details(llm_response):
@@ -159,5 +133,4 @@ def collect(API, url_list):
     news_df.drop_duplicates(inplace=True)
     news_df = news_df[news_df["Checking condition"] == "check"]
     news_df.reset_index(inplace = True, drop = True)
-    print("Total number of news without fast filtering = ", len(news_df))
     return news_df

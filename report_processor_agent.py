@@ -61,7 +61,7 @@ def report_processor(merged_df, Gemini_API_Keys):
         import os
         os.environ["API_KEY"] = API
         genai.configure(api_key=os.environ["API_KEY"])
-        model = genai.GenerativeModel("gemini-2.0-flash-exp")
+        model = genai.GenerativeModel("gemini-2.0-flash")
         
 
         prompt = f"""
@@ -138,8 +138,7 @@ def report_processor(merged_df, Gemini_API_Keys):
 
     Now classify the article based on the above instructions.
         """
-        try:
-            response = model.generate_content(
+        response = model.generate_content(
                 prompt,
                 safety_settings={
                     HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
@@ -148,20 +147,21 @@ def report_processor(merged_df, Gemini_API_Keys):
                     HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
                 }
             )
+        try:
             print("LLM Response:  ", response.text)
             return response.text
-        except ValueError as e:
-            if "Invalid operation" in str(e) and "The candidate's safety_ratings are:" in str(e):
-                print("Caught ValueError related to safety ratings. Setting response to 'General'.")
-                response = "General"
-                print("LLM Response:  ", response)
-                return response
-            else:
-                print(f"Unexpected ValueError: {e}")
-                raise
+        # except ValueError as e:
+        #     if "Invalid operation" in str(e) and "The candidate's safety_ratings are:" in str(e):
+        #         print("Caught ValueError related to safety ratings. Setting response to 'General'.")
+        #         response = "General"
+        #         print("LLM Response:  ", response)
+        #         return response
+        #     else:
+        #         print(f"Unexpected ValueError: {e}")
+        #         raise
         except Exception as e:
             print(f"Error occurred: {e}")
-            raise
+            return "General"
 
     urls=[]
     for i in range(len(merged_df)):
@@ -202,8 +202,12 @@ def report_processor(merged_df, Gemini_API_Keys):
         return merged_df2
     else:
         new_columns = ['Gemini Report Type', 'Publish Date','Accident Date','Time of Accident','Killed','Injured','Location','Road Type', 'Pedestrian Involved', 'Vehicles Involced', 'District']  # Generate column names
-        merged_df2[new_columns] = merged_df2["Gemini_responses"].str.split("<sep>", expand=True)
-        
-        # Drop the original "Report" column if no longer needed
-        merged_df2 = merged_df2.drop(columns=["Gemini_responses"])
+        # Split the "Gemini_responses" column and handle discrepancies
+        split_df = merged_df2["Gemini_responses"].str.split("<sep>", expand=True)
+
+        # Ensure the resulting DataFrame has the same number of columns as `new_columns`
+        split_df = split_df.reindex(columns=range(len(new_columns)), fill_value="ERROR")
+
+        # Assign the split data to the new columns
+        merged_df2[new_columns] = split_df
         return merged_df2

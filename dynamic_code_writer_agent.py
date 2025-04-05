@@ -112,7 +112,7 @@ def dynamic_code_writer(API, url, newspaper_name):
         token = int(result.total_tokens *1.1)
         return token
 
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-2.0-flash")
 
     # Iterate backward through div_tags
     for i in range(len(div_tags) - 1, -1, -1):
@@ -161,8 +161,9 @@ def dynamic_code_writer(API, url, newspaper_name):
         9) After successfully clicking 3 times, download the entire HTML code of the webpage and save the HTML code in a txt file named: {newspaper_name}/HTML.txt
         10) Don't use headless browsing and don't close the browser when done
         11) The entire code should be in a function named button_func(click_times=3). This will take the click_times as input.
-        12) Don't use example usage inside code snippet
+        12) Don't provide example usage inside code snippet and don't call the function yourself in your code.
         """
+   
         try:
             response = model.generate_content(prompt)
         except:
@@ -172,7 +173,7 @@ def dynamic_code_writer(API, url, newspaper_name):
         return response.text
 
     #6
-    model = genai.GenerativeModel("gemini-1.5-pro")
+    model = genai.GenerativeModel("gemini-2.0-pro-exp-02-05")
     res= button_click_code_writer(is_button)
     print(res)
 
@@ -241,23 +242,30 @@ def dynamic_code_writer(API, url, newspaper_name):
         print('The 1st button_click code gives error. Debugging...')
         prompt = f"""
     USER:
-    Here is a string that contains a div tag of the newspaper website: {url}
-    {is_button}
+Here is a string that contains a div tag of the newspaper website: {url}  
+{is_button}  
 
-    ** Instructions **
-    1) This div tag contains a button and upon clicking on it, more news should load. Write a code in python using selenium that will do the following tasks:
-    2) The chromedriver does not require a path now. Do not provide any Path.
-    3) First load the page in selenium. Then add a waiting time of 30 seconds so that all the contents load properly.
-    4) Scroll to the bottom of the webpage. 
-    5) Click on this button.
-    6) Use javascript to click the button. After every click wait for 60 seconds so that new contents can load properly.
-    7) Don't use span ID number to locate the button as it may change after clicking once.
-    8) Try to avoid the visible button text as the locator as other clickable elements on the page may contain the same text. 
-    8) Make a variable named click_times. Store the value 3 in it. It means you have to click the load more button 3 times and redo all the previous steps from 4 to 6.
-    9) After successfully clicking 3 times, download the entire HTML code of the webpage and save the HTML code in a txt file named: HTML.txt
-    10) Don't use headless browsing and don't close the browser when done
-    11) The entire code should be in a function named button_func(click_times=3). This will take the click_times as input.
-    12) Don't use example usage inside code snippet
+** Instructions **  
+1) This div tag contains a button and upon clicking on it, more news should load. Write a code in Python using Selenium that will do the following tasks:  
+2) The chromedriver does not require a path now. Do not provide any Path.  
+3) First, load the page in Selenium in full screen. Then add a waiting time of 60 seconds so that all the contents load properly.  
+4) Find the scroll height of the webpage and then scroll down to (0.85 * scroll_height) of the webpage.  
+5) Click on this button.  
+6) Use JavaScript to click the button. After every click, wait for 30 seconds so that new contents can load properly.  
+7) Don't use a span ID number to locate the button as it may change after clicking once.  
+8) Make a variable named click_times. Store the value 3 in it. It means you have to click the load more button 3 times and redo all the previous steps from 4 to 6.  
+9) Before clicking the button, store the current HTML code of the webpage in a variable named `HTML_1`.  
+10) After clicking the button, store the updated HTML code of the webpage in a variable named `HTML_2`. Print how many times you have clicked so far.  
+11) Compare the lengths of `HTML_1` and `HTML_2`:  
+    - If `HTML_2 > HTML_1`, it means new content has loaded, so continue clicking the button until `click_times` is reached.  
+    - If `HTML_2` is not greater than `HTML_1`, scroll to the bottom of the page, click the button again, wait 30 seconds, and fetch `HTML_2` again.  
+    - Compare again:  
+      - If `HTML_2 > HTML_1`, continue clicking until `click_times` is reached.  
+      - If `HTML_2` is still not greater than `HTML_1`, stop the iteration and save `HTML_1` as the final HTML.  
+12) After successfully clicking (or stopping early due to no new content), download the final HTML code of the webpage and save it in a text file named: {newspaper_name}/HTML.txt.  
+13) Don't use headless browsing and don't close the browser when done.  
+14) The entire code should be in a function named `button_func(click_times=3)`. This function will take `click_times` as input.  
+15) Don't provide example usage inside the code snippet and don't call the function yourself in your code.  
 
     AGENT:
     {res}

@@ -26,7 +26,10 @@ An example input can be:
 
 
 ## Step 4:
-After providing necessary inputs, run all the cells. You can see the output logs at the end of the notebook. If everything goes correctly, a csv file will be saved in SCRAPED folder.
+After providing necessary inputs, run all the cells. You can see the output logs at the end of the notebook. If everything goes correctly, a csv file will be saved in SCRAPED folder. An example output looks like this:
+
+![image](https://github.com/user-attachments/assets/a158e496-05c4-4b6d-9f00-4afee0671643)
+
 ## Step 5:
 You can check the Deduplication and Visualization in the notebook named **duplicates_removal_and_visualization_notebook**
 The deduplicated csv file will be saved in Duplicate_removal folder

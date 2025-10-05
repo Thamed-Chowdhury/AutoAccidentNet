@@ -1,4 +1,13 @@
 # Design and Application of Multimodal Large Language Model Based System for End to End Automation of Accident Dataset Generation
+
+📄 If you find this work useful, please cite our paper:
+“Durghotona GPT: A Web Scraping and Large Language Model Based Framework
+to Generate Road Accident Dataset Automatically in Bangladesh”
+Proceedings of the Transportation Research Board (TRB) Annual Meeting
+2026. 
+Link: https://arxiv.org/abs/2505.00015
+
+Proceedings of the Transportation Research Board (TRB) Annual Meeting 2026.
 ![Figure 1 Study Framework](https://github.com/user-attachments/assets/49503650-9ce0-4473-94e0-b78aca904282)
 
 ## Abstract
@@ -33,4 +42,53 @@ After providing necessary inputs, run all the cells. You can see the output logs
 ## Step 5:
 You can check the Deduplication and Visualization in the notebook named **duplicates_removal_and_visualization_notebook**
 The deduplicated csv file will be saved in Duplicate_removal folder
+
+------------------------------------------------------------------------
+
+📚 Citation
+
+If this repository contributes to your research or project, please cite:
+
+    @inproceedings{chowdhury2025durghotonagpt,
+      title     = {Durghotona GPT: A Web Scraping and Large Language Model Based Framework to Generate Road Accident Dataset Automatically in Bangladesh},
+      author    = {MD Thamed Bin Zaman Chowdhury and Moazzem Hossain},
+      booktitle = {Transportation Research Board (TRB) Annual Meeting},
+      year      = {2026},
+      url       = {https://arxiv.org/abs/2505.00015}
+    }
+
+------------------------------------------------------------------------
+
+🪪 License
+
+This project is released under the MIT License:
+
+    MIT License
+
+    Copyright (c) 2025 
+    MD Thamed Bin Zaman Chowdhury
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the “Software”), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+------------------------------------------------------------------------
+
+🧩 Contributors
+
+MD Thamed Bin Zaman Chowdhury — Lead Developer & Researcher
+Dr. Moazzem Hossain — Supervisor & Principal Investigator
+
 

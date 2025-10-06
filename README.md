@@ -1,8 +1,7 @@
 # Design and Application of Multimodal Large Language Model Based System for End to End Automation of Accident Dataset Generation
 
 📄 If you find this work useful, please cite our paper:
-“Durghotona GPT: A Web Scraping and Large Language Model Based Framework
-to Generate Road Accident Dataset Automatically in Bangladesh”
+“Design and Application of Multimodal Large Language Model Based System for End to End Automation of Accident Dataset Generation”
 Proceedings of the Transportation Research Board (TRB) Annual Meeting
 2026. 
 Link: https://arxiv.org/abs/2505.00015
@@ -48,7 +47,7 @@ The deduplicated csv file will be saved in Duplicate_removal folder
 
 If this repository contributes to your research or project, please cite:
 
-    @inproceedings{chowdhury2025durghotonagpt,
+    @inproceedings{chowdhury2025,
       title     = {Design and Application of Multimodal Large Language Model Based System for End to End Automation of Accident Dataset Generation},
       author    = {MD Thamed Bin Zaman Chowdhury and Moazzem Hossain},
       booktitle = {Transportation Research Board (TRB) Annual Meeting},

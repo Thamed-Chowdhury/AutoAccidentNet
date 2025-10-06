@@ -7,7 +7,6 @@ Proceedings of the Transportation Research Board (TRB) Annual Meeting
 2026. 
 Link: https://arxiv.org/abs/2505.00015
 
-Proceedings of the Transportation Research Board (TRB) Annual Meeting 2026.
 ![Figure 1 Study Framework](https://github.com/user-attachments/assets/49503650-9ce0-4473-94e0-b78aca904282)
 
 ## Abstract
